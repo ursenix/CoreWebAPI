@@ -3,12 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
+using Microsoft.Azure.Documents;
+using Microsoft.Azure.Documents.Client;
+using Newtonsoft.Json;
 
 namespace CoreWebAPI.Controllers
 {
     [Route("api")]
     public class ValuesController : Controller
     {
+        private const string EndpointUri = "https://ursenix.documents.azure.com:443/";
+        private const string PrimaryKey = "2ihOfQU6p10WD84FzxlvljrQFzA5SRJV2qlCTp0OJ8gnD8CbB03C2IBWBTHwPqHV46GccRbibLNKhQ7DWpzeBA==";
+        private DocumentClient client;
+
         // GET api/values
         [HttpGet]
 		[Route("test")]
@@ -40,6 +48,21 @@ namespace CoreWebAPI.Controllers
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+        }
+
+        [HttpGet("getDocumentDBRecords")]
+        public IEnumerable<Person> GetPersons()
+        {
+            this.client = new DocumentClient(new Uri(EndpointUri), PrimaryKey);
+
+            FeedOptions queryOptions = new FeedOptions { MaxItemCount = -1 };
+
+            IQueryable<Person> familyQuery = this.client.CreateDocumentQuery<Person>(
+                UriFactory.CreateDocumentCollectionUri("sampledatabase", "samplecollection"), queryOptions)
+                .Where(f => f.age > 3);
+
+            return familyQuery.AsEnumerable();
+        
         }
     }
 }
