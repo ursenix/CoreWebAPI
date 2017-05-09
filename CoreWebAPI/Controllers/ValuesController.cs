@@ -7,6 +7,8 @@ using System.Net;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using Newtonsoft.Json;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace CoreWebAPI.Controllers
 {
@@ -16,6 +18,11 @@ namespace CoreWebAPI.Controllers
         private const string EndpointUri = "https://ursenix.documents.azure.com:443/";
         private const string PrimaryKey = "2ihOfQU6p10WD84FzxlvljrQFzA5SRJV2qlCTp0OJ8gnD8CbB03C2IBWBTHwPqHV46GccRbibLNKhQ7DWpzeBA==";
         private DocumentClient client;
+        private readonly DocumentDBSetting _dbSettings;
+        public ValuesController(IOptions<DocumentDBSetting> dbSettings)
+        {
+            this._dbSettings = dbSettings.Value;
+        }
 
         // GET api/values
         [HttpGet]
@@ -63,6 +70,12 @@ namespace CoreWebAPI.Controllers
 
             return familyQuery.AsEnumerable();
         
+        }
+
+        [HttpGet("getDocumentDBRecordsNew")]
+        public void GetPersonsNew()
+        {
+            DocumentDBRepository dbr = new DocumentDBRepository(_dbSettings);
         }
     }
 }
