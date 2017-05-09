@@ -22,7 +22,7 @@ namespace CoreWebAPI.Controllers
 		[Route("test")]
         public IEnumerable<string> Get()
         {
-            return new string[] { "value1", "value2" };
+            return new string[] { "senthil", "kumaran" };
         }
 
         // GET api/values/5
