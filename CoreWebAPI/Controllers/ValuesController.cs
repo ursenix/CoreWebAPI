@@ -76,6 +76,7 @@ namespace CoreWebAPI.Controllers
         public void GetPersonsNew()
         {
             DocumentDBRepository dbr = new DocumentDBRepository(_dbSettings);
+            dbr.Initialize();
         }
     }
 }
